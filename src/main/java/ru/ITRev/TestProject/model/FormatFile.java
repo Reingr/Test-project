@@ -1,5 +1,7 @@
 package ru.ITRev.TestProject.model;
 
+import java.util.stream.Stream;
+
 public enum FormatFile {
 
     XLS("xls"),
@@ -15,5 +17,11 @@ public enum FormatFile {
 
     public String getName() {
         return name;
+    }
+
+    public static FormatFile fromString(final String format) {
+        return Stream.of(FormatFile.values())
+                .filter(x -> x.getName().equals(format)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Неизвестный формат файла"));
     }
 }

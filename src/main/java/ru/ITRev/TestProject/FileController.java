@@ -1,45 +1,53 @@
 package ru.ITRev.TestProject;
 
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.ModelFile;
 
+import java.io.IOException;
 import java.util.List;
 
-public class Controller {
+@RestController
+public class FileController {
+
+    private final FileService fileService;
+
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     @ApiOperation(value = "Получение данных о файле", httpMethod = "GET")
-    @RequestMapping(value = "getFile/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "getfile/{id}", method = RequestMethod.GET)
     public ModelFile getFile(@PathVariable("id") Long id) {
-        return new ModelFile();
+        return fileService.getFile(id);
     }
 
     @ApiOperation(value = "Получение данных о всех файлах", httpMethod = "GET")
-    @RequestMapping(value = "getAllFiles", method = RequestMethod.GET)
+    @RequestMapping(value = "getallfiles", method = RequestMethod.GET)
     public List<ModelFile> getAllFiles() {
         return null;
     }
 
     @ApiOperation(value = "Загрузка нового файла", httpMethod = "POST")
-    @RequestMapping(value = "downloadFile", method = RequestMethod.POST)
-    public void downloadFile() {
+    @RequestMapping(value = "downloadfile", method = RequestMethod.POST)
+    public void downloadFile(@RequestBody MultipartFile file) throws IOException {
+        fileService.downloadFile(file);
     }
 
     @ApiOperation(value = "Обновление данных файла", httpMethod = "POST")
-    @RequestMapping(value = "updateFile", method = RequestMethod.POST)
+    @RequestMapping(value = "updatefile", method = RequestMethod.POST)
     public void updateFile() {
     }
 
     @ApiOperation(value = "Удаление файла", httpMethod = "GET")
-    @RequestMapping(value = "deleteFile/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "deletefile/{id}", method = RequestMethod.GET)
     public void deleteFile(@PathVariable("id") Long id) {
     }
 
     @ApiOperation(value = "Получение списка имен файлов", httpMethod = "GET")
-    @RequestMapping(value = "getNameFiles", method = RequestMethod.GET)
+    @RequestMapping(value = "getnamefiles", method = RequestMethod.GET)
     public List<ModelFile> getNameFiles() {
-        return null;
+        return fileService.getNameFiles();
     }
 }
