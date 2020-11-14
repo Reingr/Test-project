@@ -1,6 +1,7 @@
 package ru.ITRev.TestProject.model;
 
 import lombok.Data;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,7 @@ public class ModelFile {
     private LocalDateTime dateDownload;
     private LocalDateTime dateUpgrade;
     private String name;
-    private FormatFile formatFile;
+    private FormatFile formatFile; //MimeType
     private Long size;
     private byte[] file;
 
@@ -26,5 +27,14 @@ public class ModelFile {
             return true;
         }
         return false;
+    }
+
+    public void setNameAndFormat(String fileName){
+        setName(FilenameUtils.getBaseName(fileName));
+        setFormatFile(FormatFile.fromString(FilenameUtils.getExtension(fileName)));
+    }
+
+    public String getOriginalFilename(){
+        return getName()+"."+getFormatFile().getName();
     }
 }
