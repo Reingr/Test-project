@@ -44,13 +44,14 @@ public class FileServiceImpl implements FileService {
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
         if (!file.equals(multipartFile)) {
+            int index = files.indexOf(file);
             LocalDateTime date = LocalDateTime.now();
             file.setDateUpgrade(date);
             file.setFile(multipartFile.getBytes());
             file.setSize(multipartFile.getSize());
             file.setNameAndFormat(multipartFile.getOriginalFilename());
+            files.set(index, file);
         }
-        //ToDo обновить файл в списке
     }
 
     public void deleteFile(Long id) {
