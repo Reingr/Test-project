@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
 
 import java.io.ByteArrayInputStream;
@@ -53,6 +54,17 @@ public class FileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFilename())
                 .body(new InputStreamResource(new ByteArrayInputStream(file.getFile())));
+    }
+
+    @ApiOperation(value = "Загрузка файлов из системы в архиве", httpMethod = "POST")
+    @RequestMapping(value = "downloadfiles", method = RequestMethod.POST)
+    public ResponseEntity<InputStreamResource> downloadFilesArchive(
+            @ApiParam(value = "Id файлов в базе данных", name = "arrayId")
+            @RequestBody IdList arrayId) {
+        byte[] resource = fileService.getFiles(arrayId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "Files.zip")
+                .body(new InputStreamResource(new ByteArrayInputStream(resource)));
     }
 
     @ApiOperation(value = "Обновление данных файла", httpMethod = "POST")
