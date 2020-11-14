@@ -9,18 +9,22 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class FileServiceImpl implements FileService {
     private static final List<ModelFile> files = new ArrayList<>();
-    private static int id = 1;
+    private static int staticId = 1;
 
     public ModelFile getFile(Long id) {
-        return files.stream().filter(x -> x.getId().equals(id)).findFirst().get();
+        return files.stream()
+                .filter(x -> x.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
     }
 
     public List<ModelFile> getAllFiles() {
-        return null;
+        return files;
     }
 
     public void downloadFile(MultipartFile multipartFile) throws IOException {
@@ -30,20 +34,42 @@ public class FileServiceImpl implements FileService {
         file.setDateUpgrade(date);
         file.setFile(multipartFile.getBytes());
         file.setSize(multipartFile.getSize());
+        //ToDo добавить обработку имени и типа файла
         String fileName = multipartFile.getOriginalFilename();
         file.setName("file");
         file.setFormatFile(FormatFile.fromString("docx"));
-        file.setId((long) id++);
+        file.setId((long) staticId++);
         files.add(file);
     }
 
-    public void updateFile() {
+    public void updateFile(MultipartFile multipartFile, Long id) throws IOException {
+        ModelFile file = files.stream()
+                .filter(x -> x.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
+        if (!file.equals(multipartFile)) {
+            LocalDateTime date = LocalDateTime.now();
+            file.setDateUpgrade(date);
+            file.setFile(multipartFile.getBytes());
+            file.setSize(multipartFile.getSize());
+            //ToDo добавить обработку имени и типа файла
+            String fileName = multipartFile.getOriginalFilename();
+            file.setName("file");
+            file.setFormatFile(FormatFile.fromString("docx"));
+        }
     }
 
     public void deleteFile(Long id) {
+        ModelFile file = files.stream()
+                .filter(x -> x.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
+        files.remove(file);
     }
 
-    public List<ModelFile> getNameFiles() {
-        return files;
+    public List<String> getNameFiles() {
+        List<String> fileNames = new ArrayList<>();
+        files.forEach(x -> fileNames.add(x.getName()));
+        return fileNames;
     }
 }

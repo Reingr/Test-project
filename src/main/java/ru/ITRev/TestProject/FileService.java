@@ -13,9 +13,9 @@ public interface FileService {
 
     void downloadFile(MultipartFile file) throws IOException;
 
-    void updateFile();
+    void updateFile(MultipartFile file, Long id) throws IOException;
 
     void deleteFile(Long id);
 
-    List<ModelFile> getNameFiles();
+    List<String> getNameFiles();
 }

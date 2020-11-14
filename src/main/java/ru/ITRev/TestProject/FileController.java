@@ -26,7 +26,7 @@ public class FileController {
     @ApiOperation(value = "Получение данных о всех файлах", httpMethod = "GET")
     @RequestMapping(value = "getallfiles", method = RequestMethod.GET)
     public List<ModelFile> getAllFiles() {
-        return null;
+        return fileService.getAllFiles();
     }
 
     @ApiOperation(value = "Загрузка нового файла", httpMethod = "POST")
@@ -36,18 +36,20 @@ public class FileController {
     }
 
     @ApiOperation(value = "Обновление данных файла", httpMethod = "POST")
-    @RequestMapping(value = "updatefile", method = RequestMethod.POST)
-    public void updateFile() {
+    @RequestMapping(value = "updatefile/{id}", method = RequestMethod.POST)
+    public void updateFile(@RequestBody MultipartFile file, @PathVariable("id") Long id) throws IOException {
+        fileService.updateFile(file, id);
     }
 
     @ApiOperation(value = "Удаление файла", httpMethod = "GET")
     @RequestMapping(value = "deletefile/{id}", method = RequestMethod.GET)
     public void deleteFile(@PathVariable("id") Long id) {
+        fileService.deleteFile(id);
     }
 
     @ApiOperation(value = "Получение списка имен файлов", httpMethod = "GET")
     @RequestMapping(value = "getnamefiles", method = RequestMethod.GET)
-    public List<ModelFile> getNameFiles() {
+    public List<String> getNameFiles() {
         return fileService.getNameFiles();
     }
 }
