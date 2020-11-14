@@ -1,6 +1,7 @@
 package ru.ITRev.TestProject;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.ModelFile;
@@ -18,8 +19,10 @@ public class FileController {
     }
 
     @ApiOperation(value = "Получение данных о файле", httpMethod = "GET")
-    @RequestMapping(value = "getfile/{id}", method = RequestMethod.GET)
-    public ModelFile getFile(@PathVariable("id") Long id) {
+    @RequestMapping(value = "getfile", method = RequestMethod.GET)
+    public ModelFile getFile(
+            @ApiParam(value = "Id файла в базе данных", name = "id")
+            @RequestParam("id") Long id) {
         return fileService.getFile(id);
     }
 
@@ -31,19 +34,27 @@ public class FileController {
 
     @ApiOperation(value = "Загрузка нового файла", httpMethod = "POST")
     @RequestMapping(value = "downloadfile", method = RequestMethod.POST)
-    public void downloadFile(@RequestBody MultipartFile file) throws IOException {
+    public void downloadFile(
+            @ApiParam(value = "Выбранный файл для загрузки", name = "file")
+            @RequestParam("file") MultipartFile file) throws IOException {
         fileService.downloadFile(file);
     }
 
     @ApiOperation(value = "Обновление данных файла", httpMethod = "POST")
     @RequestMapping(value = "updatefile/{id}", method = RequestMethod.POST)
-    public void updateFile(@RequestBody MultipartFile file, @PathVariable("id") Long id) throws IOException {
+    public void updateFile(
+            @ApiParam(value = "Id файла в базе данных", name = "id")
+            @RequestParam("id") Long id,
+            @ApiParam(value = "Выбранный файл для загрузки", name = "file")
+            @RequestParam("file") MultipartFile file) throws IOException {
         fileService.updateFile(file, id);
     }
 
     @ApiOperation(value = "Удаление файла", httpMethod = "GET")
-    @RequestMapping(value = "deletefile/{id}", method = RequestMethod.GET)
-    public void deleteFile(@PathVariable("id") Long id) {
+    @RequestMapping(value = "deletefile", method = RequestMethod.GET)
+    public void deleteFile(
+            @ApiParam(value = "Id файла в базе данных", name = "id")
+            @RequestParam("id") Long id) {
         fileService.deleteFile(id);
     }
 
