@@ -26,7 +26,7 @@ public class FileServiceImpl implements FileService {
         return files;
     }
 
-    public void downloadFile(MultipartFile multipartFile) throws IOException {
+    public void uploadFile(MultipartFile multipartFile) throws IOException {
         ModelFile file = new ModelFile();
         LocalDateTime date = LocalDateTime.now();
         file.setDateDownload(date);
