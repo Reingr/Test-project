@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
+import ru.ITRev.TestProject.model.Params;
 import ru.ITRev.TestProject.model.ResultModel;
 import ru.ITRev.TestProject.service.FileService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 public class FileController {
@@ -33,10 +33,14 @@ public class FileController {
         return new ResultModel(fileService.getFile(id));
     }
 
-    @ApiOperation(value = "Получение данных о всех файлах", httpMethod = "GET")
-    @RequestMapping(value = "getallfiles", method = RequestMethod.GET)
-    public ResultModel getAllFiles() throws IOException {
-        return new ResultModel(fileService.getAllFiles());
+
+    //ToDo фильтрация
+    @ApiOperation(value = "Получение данных о всех файлах", httpMethod = "POST")
+    @RequestMapping(value = "getallfiles", method = RequestMethod.POST)
+    public ResultModel getAllFiles(
+            @ApiParam(value = "Параметры для фильтрации", name = "params")
+            @RequestBody Params params) {
+        return new ResultModel(fileService.getAllFiles(params));
     }
 
     @ApiOperation(value = "Загрузка нового файла в систему", httpMethod = "POST")

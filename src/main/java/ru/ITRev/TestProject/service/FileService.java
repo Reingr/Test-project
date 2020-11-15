@@ -3,6 +3,7 @@ package ru.ITRev.TestProject.service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
+import ru.ITRev.TestProject.model.Params;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface FileService {
 
     byte[] downloadFilesArchive(IdList  arrayId);
 
-    String getAllFiles() throws IOException;
+    List<ModelFile> getAllFiles(Params params);
 
     void uploadFile(MultipartFile file) throws IOException;
 

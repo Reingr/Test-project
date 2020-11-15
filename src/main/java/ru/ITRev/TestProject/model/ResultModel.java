@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class ResultModel {
-    private int errorCode;
+    private int code;
     private Object object;
 
     public ResultModel(Object object) {
-        this.errorCode = 200;
+        this.code = 200;
         this.object = object;
     }
 }

@@ -1,16 +1,15 @@
 package ru.ITRev.TestProject.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.Utils;
+import ru.ITRev.TestProject.model.Params;
 import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,6 @@ public class FileServiceImpl implements FileService {
                 .collect(Collectors.toList());
 
         //ToDo добавить проверку если нет элементов с таким id
-
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream(new byte[0].length);
             ZipOutputStream zipFile = new ZipOutputStream(baos);
@@ -58,12 +56,34 @@ public class FileServiceImpl implements FileService {
         return new byte[0];
     }
 
-    public String getAllFiles() throws IOException {
-        StringWriter stringWriter = new StringWriter();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-        mapper.writeValue(stringWriter, files);
-        return stringWriter.toString();
+    public List<ModelFile> getAllFiles(Params params) {
+        List<ModelFile> filterFiles = new ArrayList<>(files);
+
+        if (params.getName() != null && !params.getName().equals("")) {
+            filterFiles = filterFiles.stream()
+                    .filter(x -> x.getName().contains(params.getName()))
+                    .collect(Collectors.toList());
+        }
+
+        if (params.getFormatFile() != null && !params.getFormatFile().equals("")) {
+            filterFiles = filterFiles.stream()
+                    .filter(x -> x.getFormatFile().getName().equals(params.getFormatFile()))
+                    .collect(Collectors.toList());
+        }
+
+        if (params.getFromDate() != null) {
+            filterFiles = filterFiles.stream()
+                    .filter(x -> x.getDateUpgrade().isAfter(params.getFromDate()))
+                    .collect(Collectors.toList());
+        }
+
+        if (params.getToDate() != null) {
+            filterFiles = filterFiles.stream()
+                    .filter(x -> x.getDateUpgrade().isBefore(params.getToDate()))
+                    .collect(Collectors.toList());
+        }
+
+        return filterFiles;
     }
 
     public void uploadFile(MultipartFile multipartFile) throws IOException {

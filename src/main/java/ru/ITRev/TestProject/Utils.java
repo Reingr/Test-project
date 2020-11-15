@@ -29,6 +29,7 @@ public class Utils {
     }
 
     public static String getLinkDownloadFile() {
+        //Адрес сервера и порт обычно лежат в константах в фронте
         return "/downloadfile?id=";
     }
 }
