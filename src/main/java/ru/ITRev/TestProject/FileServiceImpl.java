@@ -39,7 +39,7 @@ public class FileServiceImpl implements FileService {
             ZipOutputStream zipFile = new ZipOutputStream(baos);
             for (ModelFile modelFile : listFiles) {
 
-                ZipEntry zipEntry = new ZipEntry(modelFile.getName() +"_" + LocalDateTime.now() + "." + modelFile.getFormatFile().getName());
+                ZipEntry zipEntry = new ZipEntry(modelFile.getOriginalFileNameWithDataTime());
                 zipFile.putNextEntry(zipEntry);
                 zipFile.write(modelFile.getFile());
                 zipFile.closeEntry();
@@ -97,7 +97,7 @@ public class FileServiceImpl implements FileService {
 
     public List<String> getNameFiles() {
         List<String> fileNames = new ArrayList<>();
-        files.forEach(x -> fileNames.add(x.getOriginalFilename()));
+        files.forEach(x -> fileNames.add(x.getOriginalFileName()));
         return fileNames;
     }
 }

@@ -52,7 +52,7 @@ public class FileController {
             @RequestParam("id") Long id) {
         ModelFile file = fileService.getFile(id);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFilename())
+                .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFileName())
                 .body(new InputStreamResource(new ByteArrayInputStream(file.getFile())));
     }
 

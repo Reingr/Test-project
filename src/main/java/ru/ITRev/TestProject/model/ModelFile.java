@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 @Data
@@ -33,7 +34,13 @@ public class ModelFile {
         setFormatFile(FormatFile.fromString(FilenameUtils.getExtension(fileName)));
     }
 
-    public String getOriginalFilename() {
+    public String getOriginalFileName() {
         return getName() + "." + getFormatFile().getName();
+    }
+
+    public String getOriginalFileNameWithDataTime() {
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH:mm:ss");
+        return getName() +"_" + date.format(dateTimeFormatter) + "." + getFormatFile().getName();
     }
 }
