@@ -36,12 +36,7 @@ public class FileController {
     @ApiOperation(value = "Получение данных о всех файлах", httpMethod = "GET")
     @RequestMapping(value = "getallfiles", method = RequestMethod.GET)
     public String getAllFiles() throws IOException {
-        StringWriter stringWriter = new StringWriter();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-        mapper.writeValue(stringWriter, fileService.getAllFiles());
-
-        return stringWriter.toString();
+        return fileService.getAllFiles();
     }
 
     @ApiOperation(value = "Загрузка нового файла в систему", httpMethod = "POST")

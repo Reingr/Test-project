@@ -52,6 +52,7 @@ public class ModelFile {
         return getName() + "." + getFormatFile().getName();
     }
 
+    //ToDo вынести в Utils
     public String getOriginalFileNameWithDataTime() {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH:mm:ss");

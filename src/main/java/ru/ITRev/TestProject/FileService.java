@@ -12,7 +12,7 @@ public interface FileService {
 
     byte[] downloadFilesArchive(IdList  arrayId);
 
-    List<ModelFile> getAllFiles();
+    String getAllFiles() throws IOException;
 
     void uploadFile(MultipartFile file) throws IOException;
 

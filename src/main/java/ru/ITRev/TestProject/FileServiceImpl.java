@@ -1,5 +1,6 @@
 package ru.ITRev.TestProject;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.IdList;
@@ -7,6 +8,7 @@ import ru.ITRev.TestProject.model.ModelFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +57,12 @@ public class FileServiceImpl implements FileService {
         return new byte[0];
     }
 
-    public List<ModelFile> getAllFiles() {
-
-
-        return files;
+    public String getAllFiles() throws IOException {
+        StringWriter stringWriter = new StringWriter();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        mapper.writeValue(stringWriter, files);
+        return stringWriter.toString();
     }
 
     public void uploadFile(MultipartFile multipartFile) throws IOException {
