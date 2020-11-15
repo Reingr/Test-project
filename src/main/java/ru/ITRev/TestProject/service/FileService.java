@@ -1,4 +1,4 @@
-package ru.ITRev.TestProject;
+package ru.ITRev.TestProject.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.IdList;

@@ -1,4 +1,4 @@
-package ru.ITRev.TestProject;
+package ru.ITRev.TestProject.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;

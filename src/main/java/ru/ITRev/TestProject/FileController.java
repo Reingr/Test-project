@@ -1,6 +1,5 @@
 package ru.ITRev.TestProject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.core.io.InputStreamResource;
@@ -10,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
+import ru.ITRev.TestProject.service.FileService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 
 @RestController
