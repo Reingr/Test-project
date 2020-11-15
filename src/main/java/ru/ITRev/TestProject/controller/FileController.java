@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
+import ru.ITRev.TestProject.model.ResultModel;
 import ru.ITRev.TestProject.service.FileService;
 
 import java.io.ByteArrayInputStream;
@@ -26,69 +27,74 @@ public class FileController {
 
     @ApiOperation(value = "Получение данных о файле", httpMethod = "GET")
     @RequestMapping(value = "getfile", method = RequestMethod.GET)
-    public ModelFile getFile(
+    public ResultModel getFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
             @RequestParam("id") Long id) {
-        return fileService.getFile(id);
+        return new ResultModel(fileService.getFile(id));
     }
 
     @ApiOperation(value = "Получение данных о всех файлах", httpMethod = "GET")
     @RequestMapping(value = "getallfiles", method = RequestMethod.GET)
-    public String getAllFiles() throws IOException {
-        return fileService.getAllFiles();
+    public ResultModel getAllFiles() throws IOException {
+        return new ResultModel(fileService.getAllFiles());
     }
 
     @ApiOperation(value = "Загрузка нового файла в систему", httpMethod = "POST")
     @RequestMapping(value = "uploadfile", method = RequestMethod.POST)
-    public void uploadFile(
+    public ResultModel uploadFile(
             @ApiParam(value = "Выбранный файл для загрузки", name = "file")
             @RequestParam("file") MultipartFile file) throws IOException {
         fileService.uploadFile(file);
+        return new ResultModel(null);
     }
 
     @ApiOperation(value = "Загрузка файла из системы", httpMethod = "GET")
     @RequestMapping(value = "downloadfile", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> downloadFile(
+    public ResultModel downloadFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
             @RequestParam("id") Long id) {
         ModelFile file = fileService.getFile(id);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFileName())
-                .body(new InputStreamResource(new ByteArrayInputStream(file.getFile())));
+        return new ResultModel(
+                ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFileName())
+                        .body(new InputStreamResource(new ByteArrayInputStream(file.getFile()))));
     }
 
     @ApiOperation(value = "Загрузка файлов из системы в архиве", httpMethod = "POST")
     @RequestMapping(value = "downloadfiles", method = RequestMethod.POST)
-    public ResponseEntity<InputStreamResource> downloadFilesArchive(
+    public ResultModel downloadFilesArchive(
             @ApiParam(value = "Id файлов в базе данных", name = "arrayId")
             @RequestBody IdList arrayId) {
         byte[] resource = fileService.downloadFilesArchive(arrayId);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "Files.zip")
-                .body(new InputStreamResource(new ByteArrayInputStream(resource)));
+        return new ResultModel(
+                ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "Files.zip")
+                        .body(new InputStreamResource(new ByteArrayInputStream(resource))));
     }
 
     @ApiOperation(value = "Обновление данных файла", httpMethod = "POST")
     @RequestMapping(value = "updatefile", method = RequestMethod.POST)
-    public void updateFile(
+    public ResultModel updateFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
             @RequestParam("id") Long id,
             @ApiParam(value = "Выбранный файл для загрузки", name = "file")
             @RequestParam("file") MultipartFile file) throws IOException {
         fileService.updateFile(file, id);
+        return new ResultModel(null);
     }
 
     @ApiOperation(value = "Удаление файла", httpMethod = "GET")
     @RequestMapping(value = "deletefile", method = RequestMethod.GET)
-    public void deleteFile(
+    public ResultModel deleteFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
             @RequestParam("id") Long id) {
         fileService.deleteFile(id);
+        return new ResultModel(null);
     }
 
     @ApiOperation(value = "Получение списка имен файлов", httpMethod = "GET")
     @RequestMapping(value = "getnamefiles", method = RequestMethod.GET)
-    public List<String> getNameFiles() {
-        return fileService.getNameFiles();
+    public ResultModel getNameFiles() {
+        return new ResultModel(fileService.getNameFiles());
     }
 }

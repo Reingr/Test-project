@@ -6,10 +6,10 @@ import java.util.stream.Stream;
 
 public enum FormatFile {
 
-    XLS("xls"),
-    XLSX("xlsx"),
-    PDF("pdf"),
-    DOCX("docx");
+    xls("xls"),
+    xlsx("xlsx"),
+    pdf("pdf"),
+    docx("docx");
 
     private String name;
 
