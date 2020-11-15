@@ -1,5 +1,6 @@
 package ru.ITRev.TestProject;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.core.io.InputStreamResource;
@@ -12,6 +13,7 @@ import ru.ITRev.TestProject.model.ModelFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 @RestController
@@ -33,8 +35,13 @@ public class FileController {
 
     @ApiOperation(value = "Получение данных о всех файлах", httpMethod = "GET")
     @RequestMapping(value = "getallfiles", method = RequestMethod.GET)
-    public List<ModelFile> getAllFiles() {
-        return fileService.getAllFiles();
+    public String getAllFiles() throws IOException {
+        StringWriter stringWriter = new StringWriter();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        mapper.writeValue(stringWriter, fileService.getAllFiles());
+
+        return stringWriter.toString();
     }
 
     @ApiOperation(value = "Загрузка нового файла в систему", httpMethod = "POST")
@@ -61,7 +68,7 @@ public class FileController {
     public ResponseEntity<InputStreamResource> downloadFilesArchive(
             @ApiParam(value = "Id файлов в базе данных", name = "arrayId")
             @RequestBody IdList arrayId) {
-        byte[] resource = fileService.getFiles(arrayId);
+        byte[] resource = fileService.downloadFilesArchive(arrayId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "Files.zip")
                 .body(new InputStreamResource(new ByteArrayInputStream(resource)));

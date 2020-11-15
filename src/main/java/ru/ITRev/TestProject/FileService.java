@@ -10,7 +10,7 @@ import java.util.List;
 public interface FileService {
     ModelFile getFile(Long id);
 
-    byte[] getFiles(IdList  arrayId);
+    byte[] downloadFilesArchive(IdList  arrayId);
 
     List<ModelFile> getAllFiles();
 

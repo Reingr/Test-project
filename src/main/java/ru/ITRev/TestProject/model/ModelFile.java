@@ -1,5 +1,9 @@
 package ru.ITRev.TestProject.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.annotation.Id;
@@ -11,11 +15,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 @Data
+@JsonIgnoreProperties(value = {"file", "originalFileName", "originalFileNameWithDataTime"})
 public class ModelFile {
 
     @Id
     private Long id;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime dateDownload;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime dateUpgrade;
     private String name;
     private FormatFile formatFile; //MimeType
@@ -27,6 +36,11 @@ public class ModelFile {
         return Arrays.equals(getFile(), file.getBytes()) && file.getSize() == getSize()
                 && FilenameUtils.getBaseName(fileName).equals(getName())
                 && FilenameUtils.getExtension(fileName).equals(getFormatFile().getName());
+    }
+
+    public String getLinkDownloadFile(){
+        //ToDo надо вынести "localhost:8080/downloadfile?id=" в константу
+        return "localhost:8080/downloadfile?id="+getId();
     }
 
     public void setNameAndFormat(String fileName) {

@@ -27,7 +27,7 @@ public class FileServiceImpl implements FileService {
                 .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
     }
 
-    public byte[] getFiles(IdList arrayId) {
+    public byte[] downloadFilesArchive(IdList arrayId) {
         List<ModelFile> listFiles = files.stream()
                 .filter(x -> arrayId.getId().contains(x.getId()))
                 .collect(Collectors.toList());
@@ -56,6 +56,8 @@ public class FileServiceImpl implements FileService {
     }
 
     public List<ModelFile> getAllFiles() {
+
+
         return files;
     }
 
