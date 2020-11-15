@@ -42,7 +42,7 @@ public class FileServiceImpl implements FileService {
             ZipOutputStream zipFile = new ZipOutputStream(baos);
             for (ModelFile modelFile : listFiles) {
 
-                ZipEntry zipEntry = new ZipEntry(modelFile.getOriginalFileNameWithDataTime());
+                ZipEntry zipEntry = new ZipEntry(Utils.getOriginalFileNameWithDataTime(modelFile));
                 zipFile.putNextEntry(zipEntry);
                 zipFile.write(modelFile.getFile());
                 zipFile.closeEntry();

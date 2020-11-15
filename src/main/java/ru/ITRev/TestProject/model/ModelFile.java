@@ -51,11 +51,4 @@ public class ModelFile {
     public String getOriginalFileName() {
         return getName() + "." + getFormatFile().getName();
     }
-
-    //ToDo вынести в Utils
-    public String getOriginalFileNameWithDataTime() {
-        LocalDateTime date = LocalDateTime.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH:mm:ss");
-        return getName() +"_" + date.format(dateTimeFormatter) + "." + getFormatFile().getName();
-    }
 }
