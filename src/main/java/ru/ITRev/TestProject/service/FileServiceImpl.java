@@ -3,6 +3,8 @@ package ru.ITRev.TestProject.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.ITRev.TestProject.Utils;
+import ru.ITRev.TestProject.model.BadRequestException;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
 
@@ -26,7 +28,7 @@ public class FileServiceImpl implements FileService {
         return files.stream()
                 .filter(x -> x.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
+                .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));
     }
 
     public byte[] downloadFilesArchive(IdList arrayId) {
@@ -66,6 +68,8 @@ public class FileServiceImpl implements FileService {
     }
 
     public void uploadFile(MultipartFile multipartFile) throws IOException {
+        Utils.multipartFileValid(multipartFile);
+
         ModelFile file = new ModelFile();
         LocalDateTime date = LocalDateTime.now();
         file.setDateDownload(date);
@@ -78,10 +82,12 @@ public class FileServiceImpl implements FileService {
     }
 
     public void updateFile(MultipartFile multipartFile, Long id) throws IOException {
+        Utils.multipartFileValid(multipartFile);
+
         ModelFile file = files.stream()
                 .filter(x -> x.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
+                .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));
         if (!file.equals(multipartFile)) {
             int index = files.indexOf(file);
             LocalDateTime date = LocalDateTime.now();
@@ -97,7 +103,7 @@ public class FileServiceImpl implements FileService {
         ModelFile file = files.stream()
                 .filter(x -> x.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Файл с данным id не найден"));
+                .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));
         files.remove(file);
     }
 
