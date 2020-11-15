@@ -8,10 +8,10 @@ import lombok.Data;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.web.multipart.MultipartFile;
+import ru.ITRev.TestProject.Utils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 @Data
@@ -38,9 +38,8 @@ public class ModelFile {
                 && FilenameUtils.getExtension(fileName).equals(getFormatFile().getName());
     }
 
-    public String getLinkDownloadFile(){
-        //ToDo надо вынести "localhost:8080/downloadfile?id=" в константу
-        return "localhost:8080/downloadfile?id="+getId();
+    public String getLinkDownloadFile() {
+        return Utils.getLinkDownloadFile() + getId();
     }
 
     public void setNameAndFormat(String fileName) {

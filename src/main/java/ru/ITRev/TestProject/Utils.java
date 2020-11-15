@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Utils {
+
     public static void multipartFileValid(MultipartFile file) {
         if (file.getSize() > 15728640) {
             throw new BadRequestException("Большой размер файла");
@@ -24,6 +25,10 @@ public class Utils {
     public static String getOriginalFileNameWithDataTime(ModelFile file) {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH:mm:ss");
-        return file.getName() +"_" + date.format(dateTimeFormatter) + "." + file.getFormatFile().getName();
+        return file.getName() + "_" + date.format(dateTimeFormatter) + "." + file.getFormatFile().getName();
+    }
+
+    public static String getLinkDownloadFile() {
+        return "/downloadfile?id=";
     }
 }
