@@ -3,7 +3,7 @@ package ru.ITRev.TestProject;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ITRev.TestProject.model.BadRequestException;
+import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.model.FormatFile;
 
 public class Utils {

@@ -1,5 +1,7 @@
 package ru.ITRev.TestProject.model;
 
+import ru.ITRev.TestProject.model.exception.BadRequestException;
+
 import java.util.stream.Stream;
 
 public enum FormatFile {

@@ -1,4 +1,4 @@
-package ru.ITRev.TestProject;
+package ru.ITRev.TestProject.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

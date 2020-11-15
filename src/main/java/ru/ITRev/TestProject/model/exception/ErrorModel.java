@@ -1,4 +1,4 @@
-package ru.ITRev.TestProject.model;
+package ru.ITRev.TestProject.model.exception;
 
 import lombok.Data;
 
