@@ -67,7 +67,7 @@ public class FileServiceImpl implements FileService {
 
         if (params.getFormatFile() != null && !params.getFormatFile().equals("")) {
             filterFiles = filterFiles.stream()
-                    .filter(x -> x.getFormatFile().getName().equals(params.getFormatFile()))
+                    .filter(x -> x.getFormatFile().getValue().equals(params.getFormatFile()))
                     .collect(Collectors.toList());
         }
 

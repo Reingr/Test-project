@@ -25,7 +25,7 @@ public class Utils {
     public static String getOriginalFileNameWithDataTime(ModelFile file) {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH:mm:ss");
-        return file.getName() + "_" + date.format(dateTimeFormatter) + "." + file.getFormatFile().getName();
+        return file.getName() + "_" + date.format(dateTimeFormatter) + "." + file.getFormatFile().getValue();
     }
 
     public static String getLinkDownloadFile() {

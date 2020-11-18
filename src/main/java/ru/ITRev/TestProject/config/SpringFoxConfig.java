@@ -1,4 +1,4 @@
-package ru.ITRev.TestProject;
+package ru.ITRev.TestProject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

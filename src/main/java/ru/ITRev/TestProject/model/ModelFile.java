@@ -35,7 +35,7 @@ public class ModelFile {
         String fileName = file.getOriginalFilename();
         return Arrays.equals(getFile(), file.getBytes()) && file.getSize() == getSize()
                 && FilenameUtils.getBaseName(fileName).equals(getName())
-                && FilenameUtils.getExtension(fileName).equals(getFormatFile().getName());
+                && FilenameUtils.getExtension(fileName).equals(getFormatFile().getValue());
     }
 
     public String getLinkDownloadFile() {
@@ -48,6 +48,6 @@ public class ModelFile {
     }
 
     public String getOriginalFileName() {
-        return getName() + "." + getFormatFile().getName();
+        return getName() + "." + getFormatFile().getValue();
     }
 }

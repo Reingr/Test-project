@@ -11,19 +11,30 @@ public enum FormatFile {
     pdf("pdf"),
     docx("docx");
 
-    private String name;
+    private Long id;
+    private String value;
 
-    FormatFile(String name) {
-        this.name = name;
+    FormatFile(String value) {
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public static FormatFile fromString(final String format) {
         return Stream.of(FormatFile.values())
-                .filter(x -> x.getName().equals(format)).findFirst()
+                .filter(x -> x.getValue().equals(format)).findFirst()
+                .orElseThrow(() -> new BadRequestException("Неизвестный формат файла"));
+    }
+
+    public static FormatFile fromId(Long id) {
+        return Stream.of(FormatFile.values())
+                .filter(x -> x.getId().equals(id)).findFirst()
                 .orElseThrow(() -> new BadRequestException("Неизвестный формат файла"));
     }
 }
