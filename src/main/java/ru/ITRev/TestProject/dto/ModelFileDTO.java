@@ -16,7 +16,7 @@ import java.util.Arrays;
 @Data
 @JsonIgnoreProperties(value = {"file", "originalFileName", "originalFileNameWithDataTime"})
 public class ModelFileDTO {
-    private Long id;
+    private Integer id;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime dateDownload;

@@ -1,12 +1,16 @@
 package ru.ITRev.TestProject.service;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.Utils;
 import ru.ITRev.TestProject.dto.ModelFileDTO;
+import ru.ITRev.TestProject.model.ModelFile;
 import ru.ITRev.TestProject.model.Params;
 import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.model.IdList;
+import ru.ITRev.TestProject.repository.ModelFileRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,14 +23,20 @@ import java.util.zip.ZipOutputStream;
 
 @Service
 public class FileServiceImpl implements FileService {
+    private final ModelMapper modelMapper;
+    private final ModelFileRepository modelFileRepository;
     private static final List<ModelFileDTO> files = new ArrayList<>();
     private static int staticId = 1;
 
-    public ModelFileDTO getFile(Long id) {
-        return files.stream()
-                .filter(x -> x.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));
+    @Autowired
+    public FileServiceImpl(ModelMapper modelMapper, ModelFileRepository modelFileRepository) {
+        this.modelMapper = modelMapper;
+        this.modelFileRepository = modelFileRepository;
+    }
+
+    public ModelFileDTO getFile(Integer id) {
+        ModelFile modelFile = modelFileRepository.getOne(id);
+        return modelMapper.map(modelFile, ModelFileDTO.class);
     }
 
     public byte[] downloadFilesArchive(IdList arrayId) {
@@ -96,11 +106,12 @@ public class FileServiceImpl implements FileService {
         file.setFile(multipartFile.getBytes());
         file.setSize(multipartFile.getSize());
         file.setNameAndFormat(multipartFile.getOriginalFilename());
-        file.setId((long) staticId++);
-        files.add(file);
+
+        ModelFile modelFile = modelMapper.map(file, ModelFile.class);
+        modelFileRepository.save(modelFile);
     }
 
-    public void updateFile(MultipartFile multipartFile, Long id) throws IOException {
+    public void updateFile(MultipartFile multipartFile, Integer id) throws IOException {
         Utils.multipartFileValid(multipartFile);
 
         ModelFileDTO file = files.stream()
@@ -118,12 +129,8 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    public void deleteFile(Long id) {
-        ModelFileDTO file = files.stream()
-                .filter(x -> x.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));
-        files.remove(file);
+    public void deleteFile(Integer id) {
+        modelFileRepository.deleteById(id);
     }
 
     public List<String> getNameFiles() {

@@ -30,7 +30,7 @@ public class FileController {
     @RequestMapping(value = "getfile", method = RequestMethod.GET)
     public ResultModel getFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
-            @RequestParam("id") Long id) {
+            @RequestParam("id") Integer id) {
         return new ResultModel(fileService.getFile(id));
     }
 
@@ -57,7 +57,7 @@ public class FileController {
     @RequestMapping(value = "downloadfile", method = RequestMethod.GET)
     public ResultModel downloadFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
-            @RequestParam("id") Long id) {
+            @RequestParam("id") Integer id) {
         ModelFileDTO file = fileService.getFile(id);
         return new ResultModel(
                 ResponseEntity.ok()
@@ -81,7 +81,7 @@ public class FileController {
     @RequestMapping(value = "updatefile", method = RequestMethod.POST)
     public ResultModel updateFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
-            @RequestParam("id") Long id,
+            @RequestParam("id") Integer id,
             @ApiParam(value = "Выбранный файл для загрузки", name = "file")
             @RequestParam("file") MultipartFile file) throws IOException {
         fileService.updateFile(file, id);
@@ -92,7 +92,7 @@ public class FileController {
     @RequestMapping(value = "deletefile", method = RequestMethod.GET)
     public ResultModel deleteFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
-            @RequestParam("id") Long id) {
+            @RequestParam("id") Integer id) {
         fileService.deleteFile(id);
         return new ResultModel(null);
     }

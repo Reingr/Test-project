@@ -81,7 +81,7 @@ public class EnumLoader {
         }
     }
 
-    private void setIdToEnumField(Enum constant, Long id) throws Exception {
+    private void setIdToEnumField(Enum constant, Integer id) throws Exception {
         Field idField;
         if (id != null) {
             try {

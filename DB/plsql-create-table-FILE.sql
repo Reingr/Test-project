@@ -6,7 +6,7 @@ CREATE TABLE FILE
     name_file      Text NOT NULL,
     format_file_id integer NOT NULL REFERENCES format_file (id),
     size_file      integer NOT NULL,
-    data_file      Text NOT NULL
+    data_file      bytea NOT NULL
     );
 
 COMMENT ON COLUMN FILE.date_download IS 'Дата загрузки';

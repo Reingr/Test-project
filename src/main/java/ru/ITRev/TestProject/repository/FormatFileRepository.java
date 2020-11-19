@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.ITRev.TestProject.model.FormatFileEntity;
 
 @Repository
-public interface FormatFileRepository extends JpaRepository<FormatFileEntity, Long> {
+public interface FormatFileRepository extends JpaRepository<FormatFileEntity, Integer> {
 }

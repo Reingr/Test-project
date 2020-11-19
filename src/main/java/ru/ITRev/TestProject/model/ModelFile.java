@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 public class ModelFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private LocalDateTime dateDownload;
     private LocalDateTime dateUpgrade;
     @Column(name="name_file")
     private String name;
     @Column(name="format_file_id")
+    @Convert(converter = FormatFileConverter.class)
     private FormatFile formatFile; //MimeType
     @Column(name="size_file")
     private Long size;

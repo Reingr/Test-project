@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
-    ModelFileDTO getFile(Long id);
+    ModelFileDTO getFile(Integer id);
 
     byte[] downloadFilesArchive(IdList  arrayId);
 
@@ -17,9 +17,9 @@ public interface FileService {
 
     void uploadFile(MultipartFile file) throws IOException;
 
-    void updateFile(MultipartFile file, Long id) throws IOException;
+    void updateFile(MultipartFile file, Integer id) throws IOException;
 
-    void deleteFile(Long id);
+    void deleteFile(Integer id);
 
     List<String> getNameFiles();
 }

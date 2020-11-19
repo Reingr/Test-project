@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 public class IdList {
     @JsonDeserialize
-    private List<Long> id;
+    private List<Integer> id;
 }
