@@ -3,10 +3,10 @@ package ru.ITRev.TestProject.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.Utils;
+import ru.ITRev.TestProject.dto.ModelFileDTO;
 import ru.ITRev.TestProject.model.Params;
 import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.model.IdList;
-import ru.ITRev.TestProject.model.ModelFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,10 +19,10 @@ import java.util.zip.ZipOutputStream;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private static final List<ModelFile> files = new ArrayList<>();
+    private static final List<ModelFileDTO> files = new ArrayList<>();
     private static int staticId = 1;
 
-    public ModelFile getFile(Long id) {
+    public ModelFileDTO getFile(Long id) {
         return files.stream()
                 .filter(x -> x.getId().equals(id))
                 .findFirst()
@@ -30,7 +30,7 @@ public class FileServiceImpl implements FileService {
     }
 
     public byte[] downloadFilesArchive(IdList arrayId) {
-        List<ModelFile> listFiles = files.stream()
+        List<ModelFileDTO> listFiles = files.stream()
                 .filter(x -> arrayId.getId().contains(x.getId()))
                 .collect(Collectors.toList());
 
@@ -38,7 +38,7 @@ public class FileServiceImpl implements FileService {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream(new byte[0].length);
             ZipOutputStream zipFile = new ZipOutputStream(baos);
-            for (ModelFile modelFile : listFiles) {
+            for (ModelFileDTO modelFile : listFiles) {
 
                 ZipEntry zipEntry = new ZipEntry(Utils.getOriginalFileNameWithDataTime(modelFile));
                 zipFile.putNextEntry(zipEntry);
@@ -56,8 +56,8 @@ public class FileServiceImpl implements FileService {
         return new byte[0];
     }
 
-    public List<ModelFile> getAllFiles(Params params) {
-        List<ModelFile> filterFiles = new ArrayList<>(files);
+    public List<ModelFileDTO> getAllFiles(Params params) {
+        List<ModelFileDTO> filterFiles = new ArrayList<>(files);
 
         if (params.getName() != null && !params.getName().equals("")) {
             filterFiles = filterFiles.stream()
@@ -89,7 +89,7 @@ public class FileServiceImpl implements FileService {
     public void uploadFile(MultipartFile multipartFile) throws IOException {
         Utils.multipartFileValid(multipartFile);
 
-        ModelFile file = new ModelFile();
+        ModelFileDTO file = new ModelFileDTO();
         LocalDateTime date = LocalDateTime.now();
         file.setDateDownload(date);
         file.setDateUpgrade(date);
@@ -103,7 +103,7 @@ public class FileServiceImpl implements FileService {
     public void updateFile(MultipartFile multipartFile, Long id) throws IOException {
         Utils.multipartFileValid(multipartFile);
 
-        ModelFile file = files.stream()
+        ModelFileDTO file = files.stream()
                 .filter(x -> x.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));
@@ -119,7 +119,7 @@ public class FileServiceImpl implements FileService {
     }
 
     public void deleteFile(Long id) {
-        ModelFile file = files.stream()
+        ModelFileDTO file = files.stream()
                 .filter(x -> x.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));

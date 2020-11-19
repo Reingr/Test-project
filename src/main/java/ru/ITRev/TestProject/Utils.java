@@ -3,9 +3,9 @@ package ru.ITRev.TestProject;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ITRev.TestProject.model.ModelFile;
+import ru.ITRev.TestProject.dto.ModelFileDTO;
 import ru.ITRev.TestProject.model.exception.BadRequestException;
-import ru.ITRev.TestProject.model.FormatFile;
+import ru.ITRev.TestProject.dto.FormatFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +22,7 @@ public class Utils {
         }
     }
 
-    public static String getOriginalFileNameWithDataTime(ModelFile file) {
+    public static String getOriginalFileNameWithDataTime(ModelFileDTO file) {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH:mm:ss");
         return file.getName() + "_" + date.format(dateTimeFormatter) + "." + file.getFormatFile().getValue();

@@ -1,53 +1,26 @@
 package ru.ITRev.TestProject.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.data.annotation.Id;
-import org.springframework.web.multipart.MultipartFile;
-import ru.ITRev.TestProject.Utils;
+import ru.ITRev.TestProject.dto.FormatFile;
 
-import java.io.IOException;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Data
-@JsonIgnoreProperties(value = {"file", "originalFileName", "originalFileNameWithDataTime"})
+@Entity
+@Table(name = "file", schema = "public")
 public class ModelFile {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime dateDownload;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime dateUpgrade;
+    @Column(name="name_file")
     private String name;
+    @Column(name="format_file_id")
     private FormatFile formatFile; //MimeType
+    @Column(name="size_file")
     private Long size;
+    @Column(name="data_file")
     private byte[] file;
-
-    public boolean equals(MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-        return Arrays.equals(getFile(), file.getBytes()) && file.getSize() == getSize()
-                && FilenameUtils.getBaseName(fileName).equals(getName())
-                && FilenameUtils.getExtension(fileName).equals(getFormatFile().getValue());
-    }
-
-    public String getLinkDownloadFile() {
-        return Utils.getLinkDownloadFile() + getId();
-    }
-
-    public void setNameAndFormat(String fileName) {
-        setName(FilenameUtils.getBaseName(fileName));
-        setFormatFile(FormatFile.fromString(FilenameUtils.getExtension(fileName)));
-    }
-
-    public String getOriginalFileName() {
-        return getName() + "." + getFormatFile().getValue();
-    }
 }

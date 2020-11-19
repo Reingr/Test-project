@@ -1,7 +1,5 @@
 package ru.ITRev.TestProject.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -15,7 +13,6 @@ import ru.ITRev.TestProject.repository.FormatFileRepository;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -26,16 +23,9 @@ import java.util.Set;
 
 @Component
 public class EnumLoader {
-    private EntityManagerFactory entityManagerFactory;
 
-    @Autowired
-    @Qualifier("entityManagerFactory")
-    private void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
-    }
-
-   /* @PersistenceContext
-    EntityManager entityManager;*/
+    @PersistenceContext
+    EntityManager entityManager;
 
     @PostConstruct
     public void init() {
@@ -67,7 +57,7 @@ public class EnumLoader {
     }
 
     private <T extends JpaRepository> T concreteJpaRepository(Class<? extends T> repositoryInterface) {
-        RepositoryFactorySupport repositoryFactorySupport = new JpaRepositoryFactory(entityManagerFactory.createEntityManager());
+        RepositoryFactorySupport repositoryFactorySupport = new JpaRepositoryFactory(entityManager);
         return repositoryFactorySupport.getRepository(repositoryInterface);
     }
 

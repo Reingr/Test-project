@@ -1,4 +1,4 @@
-package ru.ITRev.TestProject.model;
+package ru.ITRev.TestProject.dto;
 
 import ru.ITRev.TestProject.model.exception.BadRequestException;
 

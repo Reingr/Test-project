@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.ITRev.TestProject.dto.ModelFileDTO;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.ModelFile;
 import ru.ITRev.TestProject.model.Params;
@@ -57,7 +58,7 @@ public class FileController {
     public ResultModel downloadFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
             @RequestParam("id") Long id) {
-        ModelFile file = fileService.getFile(id);
+        ModelFileDTO file = fileService.getFile(id);
         return new ResultModel(
                 ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFileName())
