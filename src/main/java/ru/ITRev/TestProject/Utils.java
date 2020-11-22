@@ -7,8 +7,13 @@ import ru.ITRev.TestProject.dto.ModelFileDTO;
 import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.dto.FormatFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class Utils {
 
@@ -31,5 +36,27 @@ public class Utils {
     public static String getLinkDownloadFile() {
         //Адрес сервера и порт обычно лежат в константах в фронте
         return "/downloadfile?id=";
+    }
+
+    public static byte[] createArchive(List<ModelFileDTO> listFiles){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(new byte[0].length);
+            ZipOutputStream zipFile = new ZipOutputStream(baos);
+            for (ModelFileDTO modelFile : listFiles) {
+
+                ZipEntry zipEntry = new ZipEntry(Utils.getOriginalFileNameWithDataTime(modelFile));
+                zipFile.putNextEntry(zipEntry);
+                zipFile.write(modelFile.getFile());
+                zipFile.closeEntry();
+            }
+            zipFile.close();
+            baos.close();
+
+            return baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new byte[0];
     }
 }

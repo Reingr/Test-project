@@ -12,13 +12,10 @@ import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.repository.ModelFileRepository;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -41,29 +38,11 @@ public class FileServiceImpl implements FileService {
                 .stream().map(x -> modelMapper.map(x, ModelFileDTO.class))
                 .collect(Collectors.toList());
 
-        if (listFiles.size()==0){
+        if (listFiles.size() == 0) {
             throw new BadRequestException("Файлы с такими id отсутствуют");
         }
 
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(new byte[0].length);
-            ZipOutputStream zipFile = new ZipOutputStream(baos);
-            for (ModelFileDTO modelFile : listFiles) {
-
-                ZipEntry zipEntry = new ZipEntry(Utils.getOriginalFileNameWithDataTime(modelFile));
-                zipFile.putNextEntry(zipEntry);
-                zipFile.write(modelFile.getFile());
-                zipFile.closeEntry();
-            }
-            zipFile.close();
-            baos.close();
-
-            return baos.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new byte[0];
+        return Utils.createArchive(listFiles);
     }
 
     public List<ModelFileDTO> getAllFiles(Params params) {
