@@ -9,12 +9,12 @@ import ru.ITRev.TestProject.dto.ModelFileDTO;
 import ru.ITRev.TestProject.model.ModelFile;
 import ru.ITRev.TestProject.model.Params;
 import ru.ITRev.TestProject.model.IdList;
+import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.repository.ModelFileRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -41,7 +41,10 @@ public class FileServiceImpl implements FileService {
                 .stream().map(x -> modelMapper.map(x, ModelFileDTO.class))
                 .collect(Collectors.toList());
 
-        //ToDo добавить проверку если нет элементов с таким id
+        if (listFiles.size()==0){
+            throw new BadRequestException("Файлы с такими id отсутствуют");
+        }
+
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream(new byte[0].length);
             ZipOutputStream zipFile = new ZipOutputStream(baos);
@@ -64,16 +67,11 @@ public class FileServiceImpl implements FileService {
     }
 
     public List<ModelFileDTO> getAllFiles(Params params) {
-        List<ModelFileDTO> filterFiles = modelFileRepository.findAll()
+        List<ModelFileDTO> filterFiles = modelFileRepository.findByParams(params.getName())
                 .stream().map(x -> modelMapper.map(x, ModelFileDTO.class))
                 .collect(Collectors.toList());
 
-        if (params.getName() != null && !params.getName().equals("")) {
-            filterFiles = filterFiles.stream()
-                    .filter(x -> x.getName().contains(params.getName()))
-                    .collect(Collectors.toList());
-        }
-
+        //ToDo вынести все параметры в sql запрос
         if (params.getFormatFile() != null && !params.getFormatFile().equals("")) {
             filterFiles = filterFiles.stream()
                     .filter(x -> x.getFormatFile().getValue().equals(params.getFormatFile()))
@@ -129,11 +127,6 @@ public class FileServiceImpl implements FileService {
     }
 
     public List<String> getNameFiles() {
-        List<String> fileNames = new ArrayList<>();
-        List<ModelFileDTO> files = modelFileRepository.findAll()
-                .stream().map(x -> modelMapper.map(x, ModelFileDTO.class))
-                .collect(Collectors.toList());
-        files.forEach(x -> fileNames.add(x.getOriginalFileName()));
-        return fileNames;
+        return modelFileRepository.findAllNames();
     }
 }
