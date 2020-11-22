@@ -8,11 +8,11 @@
 		<version>2.3.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ru.ITRev</groupId>
+	<groupId>ru.Test</groupId>
 	<artifactId>TestProject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>TestProject</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Тестовый проект</description>
 
 	<properties>
 		<java.version>1.8</java.version>
