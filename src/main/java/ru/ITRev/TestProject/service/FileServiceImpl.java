@@ -37,11 +37,9 @@ public class FileServiceImpl implements FileService {
     }
 
     public byte[] downloadFilesArchive(IdList arrayId) {
-        //Todo вынести в репозиторий
-        List<ModelFileDTO> listFiles = new ArrayList<>();
-        for (Integer id : arrayId.getId()) {
-            listFiles.add(modelMapper.map(modelFileRepository.getOne(id), ModelFileDTO.class));
-        }
+        List<ModelFileDTO> listFiles = modelFileRepository.findAllById(arrayId.getId())
+                .stream().map(x -> modelMapper.map(x, ModelFileDTO.class))
+                .collect(Collectors.toList());
 
         //ToDo добавить проверку если нет элементов с таким id
         try {
