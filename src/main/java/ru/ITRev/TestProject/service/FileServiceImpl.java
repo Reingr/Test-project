@@ -8,7 +8,6 @@ import ru.ITRev.TestProject.Utils;
 import ru.ITRev.TestProject.dto.ModelFileDTO;
 import ru.ITRev.TestProject.model.ModelFile;
 import ru.ITRev.TestProject.model.Params;
-import ru.ITRev.TestProject.model.exception.BadRequestException;
 import ru.ITRev.TestProject.model.IdList;
 import ru.ITRev.TestProject.repository.ModelFileRepository;
 
@@ -25,8 +24,6 @@ import java.util.zip.ZipOutputStream;
 public class FileServiceImpl implements FileService {
     private final ModelMapper modelMapper;
     private final ModelFileRepository modelFileRepository;
-    private static final List<ModelFileDTO> files = new ArrayList<>();
-    private static int staticId = 1;
 
     @Autowired
     public FileServiceImpl(ModelMapper modelMapper, ModelFileRepository modelFileRepository) {
@@ -40,9 +37,11 @@ public class FileServiceImpl implements FileService {
     }
 
     public byte[] downloadFilesArchive(IdList arrayId) {
-        List<ModelFileDTO> listFiles = files.stream()
-                .filter(x -> arrayId.getId().contains(x.getId()))
-                .collect(Collectors.toList());
+        //Todo вынести в репозиторий
+        List<ModelFileDTO> listFiles = new ArrayList<>();
+        for (Integer id : arrayId.getId()) {
+            listFiles.add(modelMapper.map(modelFileRepository.getOne(id), ModelFileDTO.class));
+        }
 
         //ToDo добавить проверку если нет элементов с таким id
         try {
@@ -67,7 +66,9 @@ public class FileServiceImpl implements FileService {
     }
 
     public List<ModelFileDTO> getAllFiles(Params params) {
-        List<ModelFileDTO> filterFiles = new ArrayList<>(files);
+        List<ModelFileDTO> filterFiles = modelFileRepository.findAll()
+                .stream().map(x -> modelMapper.map(x, ModelFileDTO.class))
+                .collect(Collectors.toList());
 
         if (params.getName() != null && !params.getName().equals("")) {
             filterFiles = filterFiles.stream()
@@ -114,18 +115,14 @@ public class FileServiceImpl implements FileService {
     public void updateFile(MultipartFile multipartFile, Integer id) throws IOException {
         Utils.multipartFileValid(multipartFile);
 
-        ModelFileDTO file = files.stream()
-                .filter(x -> x.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new BadRequestException("Файл с данным id не найден"));
+        ModelFileDTO file = modelMapper.map(modelFileRepository.getOne(id), ModelFileDTO.class);
         if (!file.equals(multipartFile)) {
-            int index = files.indexOf(file);
             LocalDateTime date = LocalDateTime.now();
             file.setDateUpgrade(date);
             file.setFile(multipartFile.getBytes());
             file.setSize(multipartFile.getSize());
             file.setNameAndFormat(multipartFile.getOriginalFilename());
-            files.set(index, file);
+            modelFileRepository.save(modelMapper.map(file, ModelFile.class));
         }
     }
 
@@ -135,6 +132,9 @@ public class FileServiceImpl implements FileService {
 
     public List<String> getNameFiles() {
         List<String> fileNames = new ArrayList<>();
+        List<ModelFileDTO> files = modelFileRepository.findAll()
+                .stream().map(x -> modelMapper.map(x, ModelFileDTO.class))
+                .collect(Collectors.toList());
         files.forEach(x -> fileNames.add(x.getOriginalFileName()));
         return fileNames;
     }

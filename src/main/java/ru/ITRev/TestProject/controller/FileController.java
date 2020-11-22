@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ITRev.TestProject.dto.ModelFileDTO;
 import ru.ITRev.TestProject.model.IdList;
-import ru.ITRev.TestProject.model.ModelFile;
 import ru.ITRev.TestProject.model.Params;
 import ru.ITRev.TestProject.model.ResultModel;
 import ru.ITRev.TestProject.service.FileService;
@@ -55,26 +54,24 @@ public class FileController {
 
     @ApiOperation(value = "Загрузка файла из системы", httpMethod = "GET")
     @RequestMapping(value = "downloadfile", method = RequestMethod.GET)
-    public ResultModel downloadFile(
+    public ResponseEntity<InputStreamResource> downloadFile(
             @ApiParam(value = "Id файла в базе данных", name = "id")
             @RequestParam("id") Integer id) {
         ModelFileDTO file = fileService.getFile(id);
-        return new ResultModel(
-                ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFileName())
-                        .body(new InputStreamResource(new ByteArrayInputStream(file.getFile()))));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, file.getOriginalFileName())
+                .body(new InputStreamResource(new ByteArrayInputStream(file.getFile())));
     }
 
     @ApiOperation(value = "Загрузка файлов из системы в архиве", httpMethod = "POST")
     @RequestMapping(value = "downloadfiles", method = RequestMethod.POST)
-    public ResultModel downloadFilesArchive(
+    public ResponseEntity<InputStreamResource> downloadFilesArchive(
             @ApiParam(value = "Id файлов в базе данных", name = "arrayId")
             @RequestBody IdList arrayId) {
         byte[] resource = fileService.downloadFilesArchive(arrayId);
-        return new ResultModel(
-                ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "Files.zip")
-                        .body(new InputStreamResource(new ByteArrayInputStream(resource))));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "Files.zip")
+                .body(new InputStreamResource(new ByteArrayInputStream(resource)));
     }
 
     @ApiOperation(value = "Обновление данных файла", httpMethod = "POST")
